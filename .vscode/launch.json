@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-GymManagementBackApplication<gym-management-back>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.atapia.main.GymManagementBackApplication",
+      "projectName": "gym-management-back",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
