@@ -17,8 +17,10 @@ import com.atapia.main.service.user.response.ResponseGetAll;
 import com.atapia.main.service.user.response.ResponseDelete;
 import com.atapia.main.service.user.request.RequestInsert;
 import com.atapia.main.service.user.request.RequestLogin;
+import com.atapia.main.service.user.request.RequestUpdate;
 import com.atapia.main.service.user.response.ResponseInsert;
 import com.atapia.main.service.user.response.ResponseLogin;
+import com.atapia.main.service.user.response.ResponseUpdate;
 
 import jakarta.validation.Valid;
 
@@ -95,7 +97,7 @@ public class UserController {
 		return new ResponseEntity<>(responseGetAll, HttpStatus.OK);
 	}
 
-	@DeleteMapping(path = "delete/{iduser}")
+	@DeleteMapping(path = "delete/{idUser}")
 	public ResponseEntity<ResponseDelete> actionDelete(@PathVariable String idUser) {
 		ResponseDelete responseDelete = new ResponseDelete();
 
@@ -106,6 +108,7 @@ public class UserController {
 
 		return new ResponseEntity<>(responseDelete, HttpStatus.OK);
 	}
+
 
 	@PostMapping(path = "login", consumes = { "multipart/form-data" })
 	public ResponseEntity<ResponseLogin> actionLogin(@Valid @ModelAttribute RequestLogin soLogin, BindingResult bindingResult) {
@@ -135,6 +138,32 @@ public class UserController {
 
     
 
-    
+    @PostMapping(path = "update", consumes = { "multipart/form-data" })
+	public ResponseEntity<ResponseUpdate> actionUpdate(@ModelAttribute RequestUpdate soUpdate) {
+		ResponseUpdate responseUpdate = new ResponseUpdate();
+
+		try {
+			UserDTO dtoUser = new UserDTO();
+
+			dtoUser.setIdUser(soUpdate.getIdUser());
+			dtoUser.setNameUser(soUpdate.getNameUser());
+			dtoUser.setEmail(soUpdate.getEmail());
+			dtoUser.setPassword(soUpdate.getPassword());
+			dtoUser.setRol(soUpdate.getRol());
+			dtoUser.setState(soUpdate.getState());
+
+			userService.updateUser(dtoUser);
+
+			responseUpdate.success();
+			responseUpdate.addResponseMesssage("Operación realizada correctamente.");
+
+			return new ResponseEntity<>(responseUpdate, HttpStatus.OK);
+		} catch(Exception e) {
+			responseUpdate.exception();
+			responseUpdate.addResponseMesssage("Ocurrió un error inesperado, estamos trabajando para solucionarlo.");
+
+			return new ResponseEntity<>(responseUpdate, HttpStatus.BAD_REQUEST);
+		}
+	}
 
 }

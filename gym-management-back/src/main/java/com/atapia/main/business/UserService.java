@@ -3,6 +3,7 @@ package com.atapia.main.business;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import jakarta.transaction.Transactional;
 @Service
 public class UserService {
     @Autowired
-
     private UserRepository userRepository;
 
     @Transactional
@@ -71,21 +71,22 @@ public class UserService {
         userRepository.deleteById(idUser);
         return true;
     }
-
+    
     @Transactional
     public boolean updateUser(UserDTO dtoUser){
-        TUser tUser = new TUser();
+        dtoUser.setUpdatedAt(new Date());
 
-        tUser.setIdUser(dtoUser.getIdUser());
-        tUser.setNameUser(dtoUser.getNameUser());
-        tUser.setEmail(dtoUser.getEmail());
-        tUser.setPassword(dtoUser.getPassword());
-        tUser.setRol(dtoUser.getRol());
-        tUser.setState(dtoUser.getState());
-        tUser.setCreatedAt(dtoUser.getCreatedAt());
-        tUser.setUpdatedAt(dtoUser.getUpdatedAt());
+        Optional<TUser> OptionTUser = userRepository.findById(dtoUser.getIdUser());
 
-        userRepository.save(tUser);
+        OptionTUser.get().setIdUser(dtoUser.getIdUser());
+        OptionTUser.get().setNameUser(dtoUser.getNameUser());
+        OptionTUser.get().setEmail(dtoUser.getEmail());
+        OptionTUser.get().setPassword(dtoUser.getPassword());
+        OptionTUser.get().setRol(dtoUser.getRol());
+        OptionTUser.get().setState(dtoUser.getState());
+        OptionTUser.get().setUpdatedAt(dtoUser.getUpdatedAt());
+
+        userRepository.save(OptionTUser.get());
 
         return true;
     }
